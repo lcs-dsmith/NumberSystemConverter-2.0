@@ -18,7 +18,7 @@ print("H: Hexadecimal")
 print("Enter your choice (B/O/D/H : ", terminator: "")
 let from = readLine()!
 // Process
-print("From")
+print("oidjajfoiasjfioasj")
 
 
 
