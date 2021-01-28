@@ -16,35 +16,112 @@ print("O: Octal")
 print("D: Decimal")
 print("H: Hexadecimal")
 print("Enter your choice (B/O/D/H) : ", terminator: "")
-let from = readLine()!
+let startBase = readLine()!
 
 print("What number system do you want to covert to")
 print("Enter your choice (B/O/D/H) : ", terminator: "")
-let to = readLine()!
-
+let endbase = readLine()!
+var base = 0
+switch endbase {
+case "B":
+    base = 16
+case "O":
+    base = 8
+case "D":
+    base =  10
+case "H":
+    base = 16
+default:
+    break
+}
 print("Enter you number : ", terminator: "")
-let value = readLine()!
-let needToConvert = Int(value)!
+var value = readLine()!
+
+var decimalResult = 0.0
+
+
 // Process
-func getDecimalEquvalent(of value: Int , from numbersystem: String , to: String) -> String {
-    var exponent  = 0.0
-    //
-    //  //current sum in decimal
-    var decimalEquvalent = 0.0
+if startBase != "D" {
+    func getDecimalEquvalent(of value: String, in numbersystem: String ) -> Double {
+        var exponent  = 0.0
+        //
+        //  //current sum in decimal
+        var decimalEquvalent = 0.0
+        
+        var startBase = 0.0
+        switch numbersystem {
+        case "B":
+            startBase = 2.0
+        case "O":
+            startBase = 8.0
+        case "H":
+            startBase = 16.0
+        default:
+            break
+        }
+        
+        for character in value.reversed() {
+            
+            if let digit = Double(String(character)) {
+                decimalEquvalent += digit * pow(startBase,exponent)
+                
+            } else {
+                switch character {
+                case "A":
+                    decimalEquvalent += 10 * pow(startBase, exponent)
+                case "B":
+                    decimalEquvalent += 11 * pow(startBase, exponent)
+                case "C":
+                    decimalEquvalent += 12 * pow(startBase, exponent)
+                case "D":
+                    decimalEquvalent += 13 * pow(startBase, exponent)
+                case "E":
+                    decimalEquvalent += 14 * pow(startBase, exponent)
+                case "F":
+                    decimalEquvalent += 15 * pow(startBase, exponent)
+                default:
+                    break
+                }
+            }
+            
+            exponent += 1
+        }
+        return decimalEquvalent
+    }
+    decimalResult = getDecimalEquvalent(of: value, in: startBase)
+} else {decimalResult = Double(value)! }
+
+func getRepresentation(of valueToConvert: Double, inBase endbase: String) -> String {
     
-    var Base = 10
+    
+    
     //Creates a variable
     //a variabe can be changed
-    var leftToCovert = String(value)
+    var leftToCovert = Int(valueToConvert)
     //creates a string
     //a string is text
     var Representation = ""
-    
-    while value > 0 {
-        //Get next binary digit
-        let nextDigit = value % Base
+    var base = 0
+    switch endbase {
+    case "B":
+        base = 16
+    case "O":
+        base = 8
+    case "D":
+        base =  10
+    case "H":
+        base = 16
+    default:
+        break
+    }
+    //the abstration we will use is a LOOP
+    //our  END CONDITION is when the leftToConver = 0
+    //so long as the CONDITION is true, {CODE} will run repetedly
+    while leftToCovert > 0 {
         
-        if Base == 16 {
+        let nextDigit = leftToCovert % base
+        
+        if base == 16 {
             
             switch nextDigit {
             case 0...9:
@@ -69,62 +146,15 @@ func getDecimalEquvalent(of value: Int , from numbersystem: String , to: String)
             Representation = String(nextDigit) + Representation
         }
         
-        print(Representation)
-   
-        for character in Representation.reversed() {
-            
-            if let digit = Double(String(character)) {
-                decimalEquvalent += digit * pow(Double(Base),exponent)
-                
-            } else {
-                switch character {
-                case "A":
-                    decimalEquvalent += 10 * pow(Double(Base), exponent)
-                case "B":
-                    decimalEquvalent += 11 * pow(Double(Base), exponent)
-                case "C":
-                    decimalEquvalent += 12 * pow(Double(Base), exponent)
-                case "D":
-                    decimalEquvalent += 13 * pow(Double(Base), exponent)
-                case "E":
-                    decimalEquvalent += 14 * pow(Double(Base), exponent)
-                case "F":
-                    decimalEquvalent += 15 * pow(Double(Base), exponent)
-                default:
-                    break
-                }
-            }
-            
-            exponent += 1
-        }
-        switch to {
-        case "2":
-            Base = 2
-        case "8":
-            Base = 8
-        case "16":
-            Base = 16
-        default:
-            break
-        }
-        
-  
-        
-        
-        
-        
         
         //get decimal value left to convert
-        //var leftToCovert =  Double(value) / Double(Base)
+        leftToCovert = leftToCovert / base
     }
     return Representation
     
     
 }
 
-
-
-
 // Output
-let answer = getDecimalEquvalent(of: needToConvert, from: from, to: to)
-print(answer)
+let result = getRepresentation(of: decimalResult, inBase: endbase)
+print(result)
