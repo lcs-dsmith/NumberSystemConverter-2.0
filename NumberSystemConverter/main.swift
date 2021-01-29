@@ -7,6 +7,12 @@
 
 import Foundation
 
+enum NumberSystemBase: Double {
+    case binary = 2.0 //2 is the raw value
+    case octal = 8.0  //8 is the raw value
+    case decimal = 10.0
+    case hexadecimal = 16.0 //
+}
 // Input
 
 // Get the "from" number system
@@ -17,20 +23,33 @@ print("D: Decimal")
 print("H: Hexadecimal")
 print("Enter your choice (B/O/D/H) : ", terminator: "")
 let startBase = readLine()!
+var fromBase = NumberSystemBase.binary
+switch startBase {
+case "B":
+    fromBase = .binary
+case "O":
+    fromBase = .octal
+case "D":
+    fromBase = .decimal
+case "H":
+    fromBase = .hexadecimal
+default:
+    break
+}
 
 print("What number system do you want to covert to")
 print("Enter your choice (B/O/D/H) : ", terminator: "")
 let endbase = readLine()!
-var base = 0
+var toBase = NumberSystemBase.binary
 switch endbase {
 case "B":
-    base = 16
+    toBase = .binary
 case "O":
-    base = 8
+    toBase = .octal
 case "D":
-    base =  10
+    toBase = .decimal
 case "H":
-    base = 16
+    toBase = .hexadecimal
 default:
     break
 }
@@ -41,44 +60,33 @@ var decimalResult = 0.0
 
 
 // Process
-if startBase != "D" {
-    func getDecimalEquvalent(of value: String, in numbersystem: String ) -> Double {
+if fromBase != .decimal {
+    func getDecimalEquvalent(of value: String, in numbersystem: NumberSystemBase ) -> Double {
         var exponent  = 0.0
         //
         //  //current sum in decimal
         var decimalEquvalent = 0.0
-        
-        var startBase = 0.0
-        switch numbersystem {
-        case "B":
-            startBase = 2.0
-        case "O":
-            startBase = 8.0
-        case "H":
-            startBase = 16.0
-        default:
-            break
-        }
+
         
         for character in value.reversed() {
             
             if let digit = Double(String(character)) {
-                decimalEquvalent += digit * pow(startBase,exponent)
+                decimalEquvalent += digit * pow(fromBase.rawValue,exponent)
                 
             } else {
                 switch character {
                 case "A":
-                    decimalEquvalent += 10 * pow(startBase, exponent)
+                    decimalEquvalent += 10 * pow(fromBase.rawValue, exponent)
                 case "B":
-                    decimalEquvalent += 11 * pow(startBase, exponent)
+                    decimalEquvalent += 11 * pow(fromBase.rawValue, exponent)
                 case "C":
-                    decimalEquvalent += 12 * pow(startBase, exponent)
+                    decimalEquvalent += 12 * pow(fromBase.rawValue, exponent)
                 case "D":
-                    decimalEquvalent += 13 * pow(startBase, exponent)
+                    decimalEquvalent += 13 * pow(fromBase.rawValue, exponent)
                 case "E":
-                    decimalEquvalent += 14 * pow(startBase, exponent)
+                    decimalEquvalent += 14 * pow(fromBase.rawValue, exponent)
                 case "F":
-                    decimalEquvalent += 15 * pow(startBase, exponent)
+                    decimalEquvalent += 15 * pow(fromBase.rawValue, exponent)
                 default:
                     break
                 }
@@ -88,10 +96,10 @@ if startBase != "D" {
         }
         return decimalEquvalent
     }
-    decimalResult = getDecimalEquvalent(of: value, in: startBase)
+    decimalResult = getDecimalEquvalent(of: value, in: fromBase)
 } else {decimalResult = Double(value)! }
 
-func getRepresentation(of valueToConvert: Double, inBase endbase: String) -> String {
+func getRepresentation(of valueToConvert: Double, inBase endbase: NumberSystemBase) -> String {
     
     
     
@@ -101,27 +109,15 @@ func getRepresentation(of valueToConvert: Double, inBase endbase: String) -> Str
     //creates a string
     //a string is text
     var Representation = ""
-    var base = 0
-    switch endbase {
-    case "B":
-        base = 16
-    case "O":
-        base = 8
-    case "D":
-        base =  10
-    case "H":
-        base = 16
-    default:
-        break
-    }
+
     //the abstration we will use is a LOOP
     //our  END CONDITION is when the leftToConver = 0
     //so long as the CONDITION is true, {CODE} will run repetedly
     while leftToCovert > 0 {
         
-        let nextDigit = leftToCovert % base
+        let nextDigit = leftToCovert % Int(endbase.rawValue)
         
-        if base == 16 {
+        if endbase == .hexadecimal {
             
             switch nextDigit {
             case 0...9:
@@ -148,7 +144,7 @@ func getRepresentation(of valueToConvert: Double, inBase endbase: String) -> Str
         
         
         //get decimal value left to convert
-        leftToCovert = leftToCovert / base
+        leftToCovert = leftToCovert / Int(endbase.rawValue)
     }
     return Representation
     
@@ -156,5 +152,6 @@ func getRepresentation(of valueToConvert: Double, inBase endbase: String) -> Str
 }
 
 // Output
-let result = getRepresentation(of: decimalResult, inBase: endbase)
+let result = getRepresentation(of: decimalResult, inBase: toBase)
+print("Your conversion is")
 print(result)
